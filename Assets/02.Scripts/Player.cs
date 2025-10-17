@@ -1,18 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed;
+    [SerializeField]
+    private GameObject Weapon;
+    [SerializeField]
+    private Transform ShootTransform;
+    [SerializeField]
+    private float ShootInterval = 0.05f;
+    private float LastShotTime = 0f;
     void Update()
     {   /*float horizontalInput = Input.GetAxisRaw("Horizontal");
         //float vertcalInput = Input.GetAxisRaw("Vertical");
         Vector3 moveTo = new Vector3(horizontalInput, 0f, 0f);
         transform.position += moveTo * moveSpeed * Time.deltaTime;*/
 
-        Vector3 moveTo = new Vector3(moveSpeed * Time.deltaTime, 0, 0);
+        /*Vector3 moveTo = new Vector3(moveSpeed * Time.deltaTime, 0, 0);
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             transform.position -= moveTo;
@@ -20,6 +28,20 @@ public class Player : MonoBehaviour
         else if (Input.GetKey(KeyCode.RightArrow))
         {
             transform.position += moveTo;
+        }*/
+
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        float tox = Mathf.Clamp(mousePos.x, -2.35f, 2.35f);
+        transform.position = new Vector3(tox, transform.position.y, transform.position.z);
+
+        Shoot();
+    }
+    void Shoot()
+    {
+        if (Time.time - LastShotTime > ShootInterval)
+        {
+            Instantiate(Weapon, ShootTransform.position, Quaternion.identity);
+            LastShotTime = Time.time;
         }
     }
 }
