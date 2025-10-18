@@ -35,7 +35,10 @@ public class Player : MonoBehaviour
         float tox = Mathf.Clamp(mousePos.x, -2.35f, 2.35f);
         transform.position = new Vector3(tox, transform.position.y, transform.position.z);
 
-        Shoot();
+        if (GameManager.instance.isGameOver == false)
+        {
+            Shoot();
+        }
     }
     void Shoot()
     {
@@ -47,9 +50,9 @@ public class Player : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Enemy")
+        if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "Boss")
         {
-            Debug.Log("Game Over");
+            GameManager.instance.SetGameOver();
             Destroy(gameObject);
         }
         else if (other.gameObject.tag == "Coin")
